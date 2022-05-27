@@ -15,13 +15,13 @@
                 {"label": "A11", "nextUse": 10}
             ],
             [
+                {"label": "A25", "nextUse": 80},
                 {"label": "A24", "nextUse": 80},
                 {"label": "A23", "nextUse": 50},
                 {"label": "A22", "nextUse": 30},
                 {"label": "A21", "nextUse": 30}
             ],
             [
-                {"label": "A38", "nextUse": 80},
                 {"label": "A37", "nextUse": 30}, 
                 {"label": "A36", "nextUse": 80}, 
                 {"label": "A35", "nextUse": 80}, 

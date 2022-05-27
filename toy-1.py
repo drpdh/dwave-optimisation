@@ -7,13 +7,14 @@ with open('toy-1-data.json') as f:
     data = json.load(f)
 
 time_to_remove_barrel = data["warehouse"]["timings"]["remove"]
+row_capacity = data["warehouse"]["rowCapacity"]
+rows = data["warehouse"]["rows"]
 
 # do the picking
 
 picklist = data["picklist"]
 removed_barrels = []
 
-rows = data["warehouse"]["rows"]
 for row in rows:
     for b in range(len(row)-1, -1, -1):
         barrel = row[b]
@@ -69,23 +70,32 @@ for barrel in removed_barrels:
 print("added removal costs", bqm)
 
 # add constraint that each removed barrel is in exactly one place
-lagrange_multiplier = 5
+lagrange_multiplier = 3
+
 for barrel in removed_barrels:
     for r1 in range(len(rows)):
         for r2 in range(len(rows)):
             if r1 == r2:
-                bqm.add_linear(f"{barrel['label']}-{r1}", -lagrange_multiplier)
+                bqm.add_linear(f"{barrel['label']}-{r1}", 
+                               -lagrange_multiplier)
                 break
             else:
                 bqm.add_quadratic(f"{barrel['label']}-{r1}",
                                   f"{barrel['label']}-{r2}",
-                                  2*lagrange_multiplier)
+                                  2 * lagrange_multiplier)
 
 print("added barrel uniqueness constraint", bqm)
 
 # add constraint on row capacity using slack variables 
 for r in range(len(rows)):
-    pass
+    spaces = row_capacity - len(rows[r])
+    if not spaces or spaces >= len(removed_barrels): continue
+    print(f"add constraint cap-{r} with spaces {spaces}")
+    bqm.add_linear_inequality_constraint([(f"{barrel['label']}-{r}", 1) for barrel in removed_barrels],
+                                         lagrange_multiplier = lagrange_multiplier,
+                                         lb = 0,
+                                         ub = spaces,
+                                         label = f"cap-{r}")
 
 print("added row capacity constraint", bqm)
 
