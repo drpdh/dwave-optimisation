@@ -1,0 +1,36 @@
+{
+    "warehouse": {
+        "rowCapacity": 8,
+        "timings": {
+            "remove": 1,
+            "rowMove": 5
+        },
+        "rows": [
+            [
+                {"label": "A16", "nextUse": 40},
+                {"label": "A15", "nextUse": 30}, 
+                {"label": "A14", "nextUse": 10}, 
+                {"label": "A13", "nextUse": 20}, 
+                {"label": "A12", "nextUse": 80}, 
+                {"label": "A11", "nextUse": 10}
+            ],
+            [
+                {"label": "A24", "nextUse": 80},
+                {"label": "A23", "nextUse": 50},
+                {"label": "A22", "nextUse": 30},
+                {"label": "A21", "nextUse": 30}
+            ],
+            [
+                {"label": "A38", "nextUse": 80},
+                {"label": "A37", "nextUse": 30}, 
+                {"label": "A36", "nextUse": 80}, 
+                {"label": "A35", "nextUse": 80}, 
+                {"label": "A34", "nextUse": 50}, 
+                {"label": "A33", "nextUse": 30}, 
+                {"label": "A32", "nextUse": 30}, 
+                {"label": "A31", "nextUse": 40}
+            ]
+        ]
+    },
+    "picklist": ["A11", "A14"]
+}
