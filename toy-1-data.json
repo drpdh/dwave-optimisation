@@ -10,8 +10,8 @@
                 {"label": "A16", "nextUse": 40},
                 {"label": "A15", "nextUse": 30}, 
                 {"label": "A14", "nextUse": 10}, 
-                {"label": "A13", "nextUse": 20}, 
-                {"label": "A12", "nextUse": 80}, 
+                {"label": "A13", "nextUse": 40}, 
+                {"label": "A12", "nextUse": 100}, 
                 {"label": "A11", "nextUse": 10}
             ],
             [

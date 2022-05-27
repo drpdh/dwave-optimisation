@@ -38,7 +38,7 @@ def removal_time_cost(barrel, row):
         row_barrel_next_use = row[b]["nextUse"]
         if row_barrel_next_use <= barrel_next_use:
             if row_barrel_next_use < barrel_next_use:    
-                time_cost += time_to_remove_barrel * (len(row) - b)
+                time_cost += time_to_remove_barrel # * (len(row) - b)
             # if equal then no additional cost, row needs moving anyway
             break
     return time_cost
@@ -62,27 +62,36 @@ def removal_time_cost(barrel, row):
 bqm = dimod.BinaryQuadraticModel(0, dimod.BINARY)
 
 # add time costs to the model
-#for barrel in removed_barrels:
-#    for r in range(len(rows)):
-#        bqm.add_linear(f"{barrel['label']}-{r}", removal_time_cost(barrel, rows[r]))
+for barrel in removed_barrels:
+    for r in range(len(rows)):
+        bqm.add_linear(f"{barrel['label']}-{r}", removal_time_cost(barrel, rows[r]))
 
-# add barrel in exactly one place constraint to the model
-penalty_bias = 100
+print("added removal costs", bqm)
+
+# add constraint that each removed barrel is in exactly one place
+lagrange_multiplier = 5
 for barrel in removed_barrels:
     for r1 in range(len(rows)):
         for r2 in range(len(rows)):
             if r1 == r2:
-                bqm.add_linear(f"{barrel['label']}-{r1}", -penalty_bias)
+                bqm.add_linear(f"{barrel['label']}-{r1}", -lagrange_multiplier)
                 break
             else:
                 bqm.add_quadratic(f"{barrel['label']}-{r1}",
                                   f"{barrel['label']}-{r2}",
-                                  -2*penalty_bias)
+                                  2*lagrange_multiplier)
+
+print("added barrel uniqueness constraint", bqm)
+
+# add constraint on row capacity using slack variables 
+for r in range(len(rows)):
+    pass
+
+print("added row capacity constraint", bqm)
 
 #cqm.set_objective(anticipated_removal_cost(removed_barrels, allocations)
 #                + barrel_allocation_constraint(removed_barrels, allocations))
 
-print(bqm)
 #sampleset = EmbeddingComposite(DWaveSampler()).sample(bqm, num_reads=10)
-sampleset = neal.SimulatedAnnealingSampler().sample(bqm, num_reads=5)
+sampleset = neal.SimulatedAnnealingSampler().sample(bqm, num_reads=10)
 print(sampleset)
